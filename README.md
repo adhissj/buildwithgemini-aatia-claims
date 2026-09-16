@@ -10,6 +10,20 @@
 
 ---
 
+## 🛡️ NovaSmart AI Governance Scorecard (M0 – M5 Cleared)
+
+![NovaSmart AI Governance Scorecard](assets/governance_scorecard_m0_m5.png)
+
+AATIA has passed 100% of all security, identity, egress perimeter, Model Armor content screening, OpenTelemetry tracing, and quality evaluation controls across missions **M0 through M5**:
+* **M0 (Estate Visibility & Discovery)**: 🔍 *Scout of the Estate*
+* **M1 (Identity & Data Least Privilege)**: 🆔 *Identity Fortress*
+* **M2 (Inbound & Outbound Perimeter Controls)**: 🚪 *Perimeter Shield*
+* **M3 (Ingress Model Armor Screening)**: 🛡️ *Model Armor Guard*
+* **M4 (Distributed Tracing & Observability)**: 👁️ *Master of Observability*
+* **M5 (Continuous Quality Evaluation & Decision)**: 🎖️ *Sovereign AI Executive*
+
+---
+
 ## 🏛️ System Architecture
 
 ```
