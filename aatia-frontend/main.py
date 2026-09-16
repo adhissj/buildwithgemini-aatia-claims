@@ -13,10 +13,8 @@ from a2a.client import ClientConfig, ClientFactory
 from a2a.types import (
     AgentCard,
     Message,
-    Part,
     Role,
     TaskArtifactUpdateEvent,
-    TextPart,
     TransportProtocol,
 )
 from fastapi import FastAPI, Request
@@ -57,7 +55,7 @@ def _auth_headers() -> dict[str, str]:
     }
 
 
-app = FastAPI()
+app = FastAPI(title="AATIA Agent Chat Proxy")
 
 
 @app.exception_handler(Exception)
@@ -89,15 +87,18 @@ def _extract_parts(parts: list) -> list[dict]:
     out: list[dict] = []
     for p in parts:
         root = getattr(p, "root", p)
-        if isinstance(root, TextPart) and getattr(root, "text", None):
-            out.append({"kind": "text", "text": root.text})
-        elif getattr(root, "data", None) is not None:
+        text_val = getattr(root, "text", None)
+        data_val = getattr(root, "data", None)
+        file_val = getattr(root, "file", None)
+        if text_val:
+            out.append({"kind": "text", "text": text_val})
+        elif data_val is not None:
             meta = getattr(root, "metadata", None) or {}
             mime = meta.get("mimeType") if isinstance(meta, dict) else None
             if mime == _A2UI_MIME:
-                out.append({"kind": "a2ui", "data": root.data})
-        elif isinstance(root, FilePart):
-            uri = getattr(getattr(root, "file", None), "uri", None)
+                out.append({"kind": "a2ui", "data": data_val})
+        elif file_val is not None:
+            uri = getattr(file_val, "uri", None)
             if uri:
                 out.append({"kind": "text", "text": uri})
     return out
