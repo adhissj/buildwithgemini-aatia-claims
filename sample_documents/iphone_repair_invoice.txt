@@ -1,0 +1,32 @@
+================================================================================
+                    OFFICIAL REPAIR INVOICE & RECEIPT
+                      Apple Store Authorized Repair Center
+                      742 Market Street, San Francisco, CA
+================================================================================
+
+RECEIPT NO   : INV-2026-883921
+DATE         : September 15, 2026
+CUSTOMER     : Alice Johnson (Account: ***4321)
+DEVICE MODEL : iPhone 15 Pro Max (256GB - Natural Titanium)
+DEVICE IMEI  : 358920192840192
+SERIAL NO    : DX3G9100L982
+
+--------------------------------------------------------------------------------
+ITEM DESCRIPTION                              QTY       UNIT PRICE       AMOUNT
+--------------------------------------------------------------------------------
+1. OLED Super Retina XDR Front Screen Repair    1          $290.00      $290.00
+2. Rear Glass Enclosure Replacement             1          $160.00      $160.00
+3. Diagnostic Labor & Water Seal Restoration    1           $50.00       $50.00
+--------------------------------------------------------------------------------
+SUBTOTAL                                                                $500.00
+TAX (0.00% - Covered under Bancassurance)                                 $0.00
+--------------------------------------------------------------------------------
+TOTAL PAID IN FULL (VISA ending in 9812)                                $500.00
+--------------------------------------------------------------------------------
+
+WORK AUTHORIZATION & DIAGNOSTIC NOTES:
+Customer presented device following accidental drops on concrete pavement. Front glass
+severely cracked; rear enclosure cracked. Device passed post-repair diagnostic water resistance seal test.
+
+Technician ID: TECH-7720 (Verified Official Repair Center)
+================================================================================

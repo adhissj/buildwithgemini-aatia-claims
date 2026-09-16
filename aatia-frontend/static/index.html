@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AATIA — Bancassurance Claims Concierge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+<style>
+  :root {
+    --primary-dark: #0f172a;
+    --accent-blue: #2563eb;
+    --accent-hover: #1d4ed8;
+    --bg-main: #f8fafc;
+    --border-light: #e2e8f0;
+    --req-red: #dc2626;
+    --success-green: #16a34a;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* --- Top Navigation Header --- */
+  header {
+    background: var(--primary-dark);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+  .badge {
+    background: var(--accent-blue);
+    color: #fff;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .user-badge {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255,255,255,0.1);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+  .dot-green {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+  }
+
+  /* --- SCREEN 1: Centered OTP Login Modal --- */
+  #screen-login {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  }
+  .login-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    text-align: center;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .login-icon {
+    width: 64px;
+    height: 64px;
+    background: #eff6ff;
+    color: var(--accent-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+  .login-card h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+  }
+  .login-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+  }
+  .form-group {
+    text-align: left;
+    margin-bottom: 1.25rem;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.4rem;
+  }
+  .req { color: var(--req-red); font-weight: 700; margin-left: 2px; }
+  .note-req { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+  .form-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--accent-blue); }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 0.95rem;
+    background: var(--accent-blue);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--accent-hover); }
+
+  /* --- SCREEN 2: Visual Claims Dashboard --- */
+  #screen-dashboard {
+    display: none;
+    max-width: 1100px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .dash-header {
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dash-welcome h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    color: var(--primary-dark);
+  }
+  .dash-welcome p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .cat-card {
+    background: #ffffff;
+    border: 2px solid var(--border-light);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cat-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(37,99,235,0.08);
+  }
+  .cat-card.selected {
+    border-color: var(--accent-blue);
+    background: #eff6ff;
+  }
+  .cat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .cat-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.3rem;
+  }
+  .cat-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 1rem;
+  }
+  .cat-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+  }
+
+  .custom-product-box {
+    background: #ffffff;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  #claim-form-panel {
+    display: none;
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.03);
+    margin-bottom: 2rem;
+  }
+
+  .policy-preview-box {
+    background: #f0f9ff;
+    border-left: 4px solid var(--accent-blue);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .upload-dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+  }
+
+  #payout-result-card {
+    display: none;
+    background: #ffffff;
+    border: 2px solid var(--success-green);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+
+  /* --- FLOATING SUPPORT WIDGET (CORNER BUTTON) --- */
+  .support-floating-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--primary-dark);
+    color: #ffffff;
+    padding: 0.8rem 1.25rem;
+    border-radius: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .support-floating-btn:hover {
+    background: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37,99,235,0.3);
+  }
+
+  /* Support Popup Modal Drawer */
+  .support-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15,23,42,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  .support-modal-box {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+  }
+  .support-modal-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-group">
+    <span class="material-symbols-outlined" style="font-size:2rem; color:#60a5fa;">shield_with_house</span>
+    <span>AATIA</span>
+    <span class="badge">Bancassurance</span>
+  </div>
+  <div class="user-badge" id="header-user-badge">
+    <span class="dot-green"></span>
+    <span id="user-name-text">Verified Account</span>
+  </div>
+</header>
+
+<!-- =========================================================================
+     SCREEN 1: CENTERED OTP LOGIN SCREEN
+     ========================================================================= -->
+<div id="screen-login">
+  <div class="login-card">
+    <div class="login-icon">
+      <span class="material-symbols-outlined" style="font-size:2rem;">lock_person</span>
+    </div>
+    <h2>Customer Verification</h2>
+    <p>Enter your registered Phone or Email to verify OTP.</p>
+
+    <form id="otp-form" onsubmit="event.preventDefault(); handleOtpVerification();">
+      <div class="form-group">
+        <label>Phone Number or Email Address <span class="req">*</span></label>
+        <input type="text" id="input-contact" class="form-input" placeholder="e.g. alice@example.com or +1-555-0199" value="alice@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label>6-Digit OTP Code <span class="req">*</span></label>
+        <input type="text" id="input-otp" class="form-input" placeholder="Enter 6-digit OTP" value="123456" required maxlength="6">
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-login">Verify OTP & Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     SCREEN 2: VISUAL CLAIMS DASHBOARD
+     ========================================================================= -->
+<div id="screen-dashboard">
+  
+  <div class="dash-header">
+    <div class="dash-welcome">
+      <h1 id="welcome-title">Welcome back, Customer</h1>
+      <p id="welcome-sub">Account Standing: <strong>ACTIVE_VERIFIED</strong> | KYC: <strong>PASSED</strong></p>
+    </div>
+    <span class="badge" style="background:#16a34a; font-size:0.85rem; padding:0.4rem 0.8rem;">Direct Deposit Ready</span>
+  </div>
+
+  <div class="section-title">
+    <span class="material-symbols-outlined" style="color:var(--accent-blue);">grid_view</span>
+    <span>Select Product Line</span>
+  </div>
+
+  <div class="category-grid">
+    <div class="cat-card" onclick="selectProduct('auto', 'Auto & Mobility Excess', 'Retail')">
+      <div>
+        <div class="cat-icon"><span class="material-symbols-outlined">directions_car</span></div>
+        <div class="cat-title">Auto & Mobility</div>
+        <div class="cat-desc">Windshield glass repair, collision excess reimbursement, rental car allowance.</div>
+      </div>
+      <div class="cat-badge">Deductible: $250 | Coverage: 100%</div>
+    </div>
+
+    <div class="cat-card" onclick="selectProduct('travel', 'Travel & Mobility Protection', 'Retail')">
+      <div>
+        <div class="cat-icon"><span class="material-symbols-outlined">flight_takeoff</span></div>
+        <div class="cat-title">Travel & Mobility</div>
+        <div class="cat-desc">Emergency medical clinic, trip delays (> 6h), baggage loss, stolen items.</div>
+      </div>
+      <div class="cat-badge">Deductible: $100 | Coverage: 80%</div>
+    </div>
+
+    <div class="cat-card" onclick="selectProduct('gadget', 'Mobile Devices & Electronics', 'Retail')">
+      <div>
+        <div class="cat-icon"><span class="material-symbols-outlined">devices</span></div>
+        <div class="cat-title">Mobile & Gadgets</div>
+        <div class="cat-desc">Accidental screen cracks, liquid spills, battery/glass replacement, theft.</div>
+      </div>
+      <div class="cat-badge">Deductible: $50 | Coverage: 80%</div>
+    </div>
+
+    <div class="cat-card" onclick="selectProduct('spoilage', 'SME Inventory Stock Spoilage', 'Commercial')">
+      <div>
+        <div class="cat-icon"><span class="material-symbols-outlined">storefront</span></div>
+        <div class="cat-title">SME Stock Spoilage</div>
+        <div class="cat-desc">Perishable inventory or pharmaceutical stock lost due to power outage (> 4h).</div>
+      </div>
+      <div class="cat-badge">Deductible: $500 | Coverage: 90%</div>
+    </div>
+  </div>
+
+  <div class="custom-product-box">
+    <span class="material-symbols-outlined" style="color:var(--accent-blue);">edit_note</span>
+    <div style="flex:1;">
+      <div style="font-weight:600; font-size:0.9rem;">Custom Product Entry</div>
+      <div style="font-size:0.8rem; color:var(--text-muted);">E.g. Electric Scooter, Drone Camera Insurance</div>
+    </div>
+    <input type="text" id="custom-product-input" class="form-input" placeholder="Type product name..." style="max-width:240px;">
+    <button type="button" class="btn-submit" style="width:auto; padding:0.65rem 1.2rem; font-size:0.875rem;" onclick="handleCustomProduct()">Select</button>
+  </div>
+
+  <div id="claim-form-panel">
+    <div class="section-title">
+      <span class="material-symbols-outlined" style="color:var(--accent-blue);">assignment</span>
+      <span id="form-selected-title">Claim Details</span>
+      <span class="note-req">(* mandatory field)</span>
+    </div>
+
+    <div class="policy-preview-box" id="policy-terms-preview">
+      Retrieving policy terms...
+    </div>
+
+    <form id="dynamic-claim-form" onsubmit="event.preventDefault(); submitClaim();">
+      <div id="dynamic-fields-container"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Total Claimed Amount ($ USD) <span class="req">*</span></label>
+          <input type="number" id="claim-amount" class="form-input" placeholder="e.g. 450.00" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Verified Bank Payout Account</label>
+          <input type="text" id="target-account" class="form-input" value="Checking (***4321)" readonly style="background:#f1f5f9;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Incident & Problem Description <span class="req">*</span></label>
+        <textarea id="problem-description" class="form-input" rows="3" placeholder="Provide a brief description of the incident..." required style="resize:vertical;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label id="doc-upload-label">Mandatory Supporting Documents <span class="req">*</span></label>
+        <div class="upload-dropzone" id="upload-dropzone-box" onclick="document.getElementById('file-input').click();">
+          <span class="material-symbols-outlined" id="upload-icon" style="font-size:2rem; color:var(--accent-blue);">cloud_upload</span>
+          <div style="font-weight:600; font-size:0.9rem; margin-top:0.4rem;" id="doc-upload-title">Click or Drop required document files here</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);" id="doc-upload-subtitle">(Repair invoice, police report, or settlement letter)</div>
+          <input type="file" id="file-input" style="display:none;" onchange="handleFileSelected(event)">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit-claim" style="margin-top:1rem;">
+        Submit Claim & Process Direct Deposit Payout
+      </button>
+    </form>
+  </div>
+
+  <div id="payout-result-card">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+      <span class="material-symbols-outlined" style="color:var(--success-green); font-size:2.5rem;">check_circle</span>
+      <div>
+        <h2 style="font-family:'Outfit',sans-serif; color:var(--primary-dark);">Claim Decision & Payout Status</h2>
+        <div style="color:var(--text-muted); font-size:0.875rem;" id="payout-ref-id">Transaction Status Processed</div>
+      </div>
+    </div>
+
+    <div style="background:#f8fafc; border-radius:12px; padding:1.25rem; margin-bottom:1.25rem; font-size:0.95rem; line-height:1.7;" id="payout-details-content">
+    </div>
+
+    <button type="button" class="btn-submit" style="background:var(--primary-dark);" onclick="location.reload()">Start New Claim</button>
+  </div>
+
+</div>
+
+<!-- =========================================================================
+     FLOATING SUPPORT WIDGET (CORNER BUTTON & MODAL)
+     ========================================================================= -->
+<div class="support-floating-btn" onclick="toggleSupportModal(true)">
+  <span class="material-symbols-outlined">support_agent</span>
+  <span>Contact Claims Support</span>
+</div>
+
+<div class="support-modal-overlay" id="support-modal">
+  <div class="support-modal-box">
+    <button class="support-modal-close" onclick="toggleSupportModal(false)">
+      <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+    </button>
+    
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+      <div style="width:44px; height:44px; background:#eff6ff; color:var(--accent-blue); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+        <span class="material-symbols-outlined" style="font-size:1.5rem;">headset_mic</span>
+      </div>
+      <div>
+        <h3 style="font-family:'Outfit',sans-serif; font-size:1.2rem; color:var(--primary-dark);">AATIA Claims Concierge Support</h3>
+        <p style="font-size:0.8rem; color:var(--text-muted);">24/7 Dispute & Audit Desk</p>
+      </div>
+    </div>
+
+    <div style="font-size:0.9rem; color:var(--text-dark); line-height:1.6; margin-bottom:1.25rem; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid var(--border-light);">
+      <div style="margin-bottom:0.75rem;">
+        <strong>📞 Claims Hotline (24/7):</strong><br>
+        <span style="color:var(--accent-blue); font-weight:700;">1-800-AATIA-HELP</span> (1-800-228-4243)
+      </div>
+      <div style="margin-bottom:0.75rem;">
+        <strong>📧 Claims Audit Email:</strong><br>
+        <span style="color:var(--accent-blue); font-weight:600;">disputes@aatia-insurance.com</span>
+      </div>
+      <div>
+        <strong>🏛️ Escalation Desk:</strong><br>
+        Request a Human Claims Adjuster review for duplicate invoice appeals or identity verification.
+      </div>
+    </div>
+
+    <button type="button" class="btn-submit" onclick="toggleSupportModal(false)">Close Support Window</button>
+  </div>
+</div>
+
+<script>
+let currentVerifiedUser = "Alice Johnson";
+let selectedCategoryName = "Retail";
+let selectedProductName = "auto";
+
+function toggleSupportModal(show) {
+  document.getElementById("support-modal").style.display = show ? "flex" : "none";
+}
+
+async function handleOtpVerification() {
+  const contact = document.getElementById("input-contact").value.trim();
+  const otp = document.getElementById("input-otp").value.trim();
+
+  if (!contact || !otp) {
+    alert("Please fill in both required fields (*).");
+    return;
+  }
+
+  const btn = document.getElementById("btn-login");
+  btn.textContent = "Verifying OTP...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: `Verify OTP ${otp} for ${contact}`, user_id: contact })
+    });
+    
+    if (contact.includes("bob")) currentVerifiedUser = "Bob Smith";
+    else if (contact.includes("bakery")) currentVerifiedUser = "Artisan Bakery LLC";
+    else currentVerifiedUser = "Alice Johnson";
+
+    document.getElementById("screen-login").style.display = "none";
+    document.getElementById("screen-dashboard").style.display = "block";
+    document.getElementById("header-user-badge").style.display = "flex";
+
+    document.getElementById("user-name-text").textContent = currentVerifiedUser;
+    document.getElementById("welcome-title").textContent = `Welcome, ${currentVerifiedUser}`;
+
+  } catch (err) {
+    alert("Verification failed: " + err.message);
+    btn.textContent = "Verify OTP & Login";
+    btn.disabled = false;
+  }
+}
+
+async function selectProduct(productKey, productTitle, category) {
+  selectedProductName = productKey;
+  selectedCategoryName = category;
+
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('selected');
+
+  document.getElementById("claim-form-panel").style.display = "block";
+  document.getElementById("form-selected-title").textContent = `${productTitle} Claim Details`;
+  document.getElementById("policy-terms-preview").textContent = `Loading policy coverage terms for ${productTitle}...`;
+
+  const fieldsContainer = document.getElementById("dynamic-fields-container");
+  const uploadTitle = document.getElementById("doc-upload-title");
+  const uploadSub = document.getElementById("doc-upload-subtitle");
+
+  if (productKey === 'auto') {
+    fieldsContainer.innerHTML = `
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vehicle License Plate / VIN <span class="req">*</span></label>
+          <input type="text" id="auto-vin" class="form-input" placeholder="e.g. 7XYZ991 / VIN-884920" required>
+        </div>
+        <div class="form-group">
+          <label>Police Accident Report No. (if collision) <span class="req">*</span></label>
+          <input type="text" id="auto-police-no" class="form-input" placeholder="e.g. PAR-2026-9921" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Auto Repair Body Shop Name <span class="req">*</span></label>
+          <input type="text" id="merchant-name" class="form-input" placeholder="e.g. Precision Collision Center" required>
+        </div>
+        <div class="form-group">
+          <label>Incident / Repair Date <span class="req">*</span></label>
+          <input type="date" id="receipt-date" class="form-input" value="${new Date().toISOString().split('T')[0]}" required>
+        </div>
+      </div>
+    `;
+    uploadTitle.textContent = "Drop Repair Invoice & Police Accident Report";
+    uploadSub.textContent = "Mandatory: Primary auto insurer settlement letter + Body shop receipt";
+
+  } else if (productKey === 'travel') {
+    fieldsContainer.innerHTML = `
+      <div class="form-row">
+        <div class="form-group">
+          <label>Flight No. / Boarding Pass PNR <span class="req">*</span></label>
+          <input type="text" id="travel-pnr" class="form-input" placeholder="e.g. BA-178 / PNR-X9821" required>
+        </div>
+        <div class="form-group">
+          <label>Clinic / Hotel / Airline Vendor Name <span class="req">*</span></label>
+          <input type="text" id="merchant-name" class="form-input" placeholder="e.g. London Emergency Medical Clinic" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Incident Date <span class="req">*</span></label>
+          <input type="date" id="receipt-date" class="form-input" value="${new Date().toISOString().split('T')[0]}" required>
+        </div>
+        <div class="form-group">
+          <label>Destination City / Country <span class="req">*</span></label>
+          <input type="text" id="travel-city" class="form-input" placeholder="e.g. London, United Kingdom" required>
+        </div>
+      </div>
+    `;
+    uploadTitle.textContent = "Drop Boarding Pass & Medical / Hotel Bill";
+    uploadSub.textContent = "Mandatory: Itemized clinic invoice + Airline PIR (if baggage delay)";
+
+  } else if (productKey === 'gadget') {
+    fieldsContainer.innerHTML = `
+      <div class="form-row">
+        <div class="form-group">
+          <label>Device Serial No. / IMEI <span class="req">*</span></label>
+          <input type="text" id="gadget-imei" class="form-input" placeholder="e.g. IMEI-35892019284" required>
+        </div>
+        <div class="form-group">
+          <label>Repair Service Center Name <span class="req">*</span></label>
+          <input type="text" id="merchant-name" class="form-input" placeholder="e.g. Official Apple Store / uBreakiFix" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Repair Date <span class="req">*</span></label>
+          <input type="date" id="receipt-date" class="form-input" value="${new Date().toISOString().split('T')[0]}" required>
+        </div>
+        <div class="form-group">
+          <label>Device Model <span class="req">*</span></label>
+          <input type="text" id="gadget-model" class="form-input" placeholder="e.g. iPhone 15 Pro / MacBook Air M3" required>
+        </div>
+      </div>
+    `;
+    uploadTitle.textContent = "Drop Repair Estimate & IMEI Photo";
+    uploadSub.textContent = "Mandatory: Itemized repair shop invoice + Carrier blacklist notice (if stolen)";
+
+  } else {
+    fieldsContainer.innerHTML = `
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vendor / Merchant / Business Name <span class="req">*</span></label>
+          <input type="text" id="merchant-name" class="form-input" placeholder="e.g. Cold Storage Logistics LLC" required>
+        </div>
+        <div class="form-group">
+          <label>Incident Date <span class="req">*</span></label>
+          <input type="date" id="receipt-date" class="form-input" value="${new Date().toISOString().split('T')[0]}" required>
+        </div>
+      </div>
+    `;
+    uploadTitle.textContent = "Drop Required Proof & Invoice Files";
+    uploadSub.textContent = "Mandatory: POS inventory ledger / Temperature log / Repair bill";
+  }
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: `Get policy document package for ${category} product ${productKey}`, user_id: currentVerifiedUser })
+    });
+    const data = await res.json();
+    const text = (data.parts || []).map(p => p.text || "").join("\n").trim();
+    document.getElementById("policy-terms-preview").innerText = text;
+  } catch (err) {
+    document.getElementById("policy-terms-preview").textContent = `Policy Coverage: ${productTitle}`;
+  }
+
+  document.getElementById("claim-form-panel").scrollIntoView({ behavior: 'smooth' });
+}
+
+function handleFileSelected(event) {
+  const files = event.target.files;
+  if (files && files.length > 0) {
+    const fileName = files[0].name;
+    document.getElementById("doc-upload-title").innerHTML = `<span style="color:var(--success-green); font-weight:700;">✓ Attached File: ${fileName}</span>`;
+    document.getElementById("doc-upload-subtitle").textContent = "File ready for claim submission. Click again to change file.";
+    document.getElementById("upload-icon").style.color = "var(--success-green)";
+    document.getElementById("upload-dropzone-box").style.borderColor = "var(--success-green)";
+  }
+}
+
+function handleCustomProduct() {
+  const customName = document.getElementById("custom-product-input").value.trim();
+  if (!customName) {
+    alert("Please enter a product name.");
+    return;
+  }
+  selectProduct(customName, customName, "Custom Asset");
+}
+
+async function submitClaim() {
+  const merchant = document.getElementById("merchant-name") ? document.getElementById("merchant-name").value.trim() : "Vendor";
+  const rDate = document.getElementById("receipt-date") ? document.getElementById("receipt-date").value : new Date().toISOString().split('T')[0];
+  const amount = parseFloat(document.getElementById("claim-amount").value);
+  const problem = document.getElementById("problem-description").value.trim();
+
+  if (!merchant || !rDate || !amount || !problem) {
+    alert("Please complete all required fields (*).");
+    return;
+  }
+
+  const btn = document.getElementById("btn-submit-claim");
+  btn.textContent = "Calculating Payout & Disbursing Funds...";
+  btn.disabled = true;
+
+  const promptMsg = `User ${currentVerifiedUser} is fully OTP-VERIFIED and bank-validated. Process claim submission for product ${selectedProductName} (Category: ${selectedCategoryName}). Expense Amount: $${amount}, Merchant: ${merchant}, Receipt Date: ${rDate}, Problem Description: ${problem}. Please execute calculate_claim_payout, check_fraud_risk, and submit_claim_payout to Checking (***4321).`;
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: promptMsg, user_id: currentVerifiedUser })
+    });
+    const data = await res.json();
+    const responseText = (data.parts || []).map(p => p.text || "").join("\n").trim();
+
+    document.getElementById("claim-form-panel").style.display = "none";
+    document.getElementById("payout-result-card").style.display = "block";
+    document.getElementById("payout-details-content").innerText = responseText;
+    document.getElementById("payout-result-card").scrollIntoView({ behavior: 'smooth' });
+
+  } catch (err) {
+    alert("Claim error: " + err.message);
+    btn.textContent = "Submit Claim & Process Direct Deposit Payout";
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
