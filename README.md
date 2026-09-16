@@ -6,6 +6,8 @@
 
 **AATIA (Asset And Travel Insurance Agent)** is an intelligent AI claims concierge designed for banking clients. Built with Google's **Agent Development Kit (ADK)** and deployed on **Vertex AI Agent Runtime**, AATIA authenticates bank policyholders via OTP, verifies coverage limits, performs anti-fraud invoice signature checks, calculates actuarial payouts, and executes instant direct deposit claims disbursements.
 
+![AATIA Agent Demo](assets/aatia_demo.gif)
+
 ---
 
 ## 🏛️ System Architecture
